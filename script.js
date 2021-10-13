@@ -32,8 +32,6 @@ async function getUsers(current_page, limit_rows) {
   const {hasMore, results} = await response.json();
   more = hasMore;
   displayResults(hasMore, results);
-
-  
 };
 
 getUsers(currentPage, rows);
@@ -47,7 +45,7 @@ nextButton.addEventListener('click', function() {
 });
 
 previousButton.addEventListener('click', function() {
-  if (!currentPage === 1) {
+  if (currentPage !== 1) {
     currentPage--;
     getUsers(currentPage, rows);
   }
