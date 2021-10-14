@@ -4,11 +4,23 @@ const previousButton = document.querySelector('.js-previous');
 const nextButton = document.querySelector('.js-next');
 const current_page = document.querySelector('.js-page'); 
 
-let currentPage = 1;
-let rows = 5;
+console.log(window.location)
+
+let urlParams = new URLSearchParams(window.location.search);
+console.log(urlParams);
+let currentPage = urlParams.get('page') ?? 1;
+let userRows = urlParams.get('limit') ?? 5;
+
 let more = true;
 
-function displayResults(hasMore, users) {
+function updateLocationSearch() {
+  location.search = `?page=${currentPage}&limit=${userRows}}`;
+}
+
+let url = `http://localhost:3001/api/users?page=${currentPage}&limit=${userRows}`;
+
+// DISPLAY USERS
+function displayResults(users) {
   result_wrapper.innerHTML = '';
 
   users.forEach(u => {
@@ -27,30 +39,37 @@ function displayResults(hasMore, users) {
   });
 };
 
-async function getUsers(current_page, limit_rows) {
-  const response = await fetch(`http://localhost:3001/api/users?page=${current_page}&limit=${limit_rows}`);
-  const {hasMore, results} = await response.json();
-  more = hasMore;
-  displayResults(hasMore, results);
+// GET USERS
+async function getUsers(url) {
+  try {
+    const response = await fetch(url);
+    const {hasMore, results} = await response.json();
+
+    more = hasMore;
+    displayResults(results);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-getUsers(currentPage, rows);
 
-
+// NEXT BUTTON
 nextButton.addEventListener('click', function() {
   if (more) {
     currentPage++;
-    getUsers(currentPage, rows);
+    updateLocationSearch();
+    getUsers(url);
   }
 });
 
+// PREVIOUS BUTTON
 previousButton.addEventListener('click', function() {
-  if (currentPage !== 1) {
+  if (currentPage != 1) {
     currentPage--;
-    getUsers(currentPage, rows);
-  }
-})
+    updateLocationSearch();
+    getUsers(url);
+  } 
+});
 
 
-
-
+getUsers(url);
