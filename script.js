@@ -4,17 +4,15 @@ const previousButton = document.querySelector('.js-previous');
 const nextButton = document.querySelector('.js-next');
 const current_page = document.querySelector('.js-page'); 
 
-console.log(window.location)
 
 let urlParams = new URLSearchParams(window.location.search);
-console.log(urlParams);
 let currentPage = urlParams.get('page') ?? 1;
 let userRows = urlParams.get('limit') ?? 5;
 
 let more = true;
 
 function updateLocationSearch() {
-  location.search = `?page=${currentPage}&limit=${userRows}}`;
+  location.search = `?page=${currentPage}&limit=${userRows}`;
 }
 
 let url = `http://localhost:3001/api/users?page=${currentPage}&limit=${userRows}`;
@@ -70,6 +68,5 @@ previousButton.addEventListener('click', function() {
     getUsers(url);
   } 
 });
-
 
 getUsers(url);
